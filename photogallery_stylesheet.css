@@ -29,7 +29,7 @@ html {
 #container {
     background-color: black;
     display:flex;
-    width: 100%;
+    width: 90%;
     min-width: 900px;
     min-height: 500px;
     flex-direction: row;
