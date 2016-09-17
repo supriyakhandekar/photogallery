@@ -56,7 +56,6 @@
       xhr.open('GET', 'https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key=cbfb84b23a5a7af2a0bf27cc8a87d85b&gallery_id=5704-72157622566655097&per_page=6&format=json&nojsoncallback=1&auth_token=72157670651754274-ee5c159e8de3d7f6&api_sig=8d2549f634fb84d4c2fed7dc94c5f9e3');
       xhr.onload = function() {
          if (xhr.status === 200) {
-           debugger;
             var photos_json = JSON.parse(xhr.responseText),
                 url_to_construct,
                 photo_list = photos_json['photos']['photo'];
@@ -67,11 +66,8 @@
                     id = photo_list[i]['id'],
                     secret = photo_list[i]['secret'],
                     url_to_construct =`http://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
-
                     image_map.push(url_to_construct);
                     title_map.push(photo_list[i]['title']);
-                    console.log(image_map);
-                    console.log(title_map);
                     image_nodes[i].style.backgroundImage = `url(${url_to_construct})`;
             }
        }
@@ -84,15 +80,12 @@
         for (var i=0; i <image_nodes.length; i++ ) {
             var clicked_image = image_nodes[i];
             clicked_image.addEventListener('click', function() {
-                var current_attr = clicked_image.getAttribute('data-img'),
+                var current_attr = this.getAttribute('data-img'),
                     imageToDisplay = document.getElementById('view_image'),
                     lightbox = document.getElementsByClassName('lightbox');
-
                 imageToDisplay.setAttribute('src', image_map[current_attr]);
                 lightbox[0].removeAttribute('style');
-                console.log(current_attr)
                 title.innerHTML = title_map[current_attr];
-                console.log(title.innerHTML);
             });
        }
     }());

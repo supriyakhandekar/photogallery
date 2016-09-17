@@ -30,7 +30,7 @@ html {
     background-color: black;
     display:flex;
     width: 100%;
-    min-width: 1200px;
+    min-width: 900px;
     min-height: 500px;
     flex-direction: row;
     flex-wrap: wrap;
@@ -137,6 +137,7 @@ html {
     width: 15%;
 }
 #exit {
+    cursor: pointer;
     display:flex;
     letter-spacing: 2px;
     font-family: sans-serif;
