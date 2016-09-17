@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel = 'stylesheet' href = 'photogallery_stylesheet.css'>
+    </head>
+    <body>
+        <h1 id='title'>GALLERY</h1>
+        <p id='sub-title'>PEOPLE SLEEPING IN LIBRARIES</p>
+        <div id='container'>
+            <a class='img0 image' data-img='0'>
+            </a>
+            <a class='img1 image' data-img='1'>
+            </a>
+            <a class='img2 image' data-img='2'>
+            </a>
+            <a class='img3 image' data-img='3'>
+            </a>
+            <a class='img4 image' data-img='4'>
+            </a>
+            <a class="img5 image" data-img="5">
+            </a>
+            <a class="img6 image" data-img="6">
+            </a>
+            <a class="img7 image" data-img="7">
+            </a>
+            <a class="img8 image" data-img="8">
+            </a>
+            <a class="img9 image" data-img="9">
+            </a>
+            <a class='lightbox' style='display:none;'>
+                <div id='previous_container'>
+                    <button id='previous' class='navigate_btn'>PREVIOUS</button>
+                </div>
+                <div id ='lightbox_container'>
+                    <div id='photo_title'>Title</div>
+                    <div style='display:flex;height: 80%; flex-direction: column;justify-content:center; align-items:center;'>
+                        <img id='view_image' src=''>
+                    </div>
+                    <p id='exit'>EXIT</p>
+                </div>
+                <div id = 'next_container'>
+                    <button id= 'next' class='navigate_btn'>NEXT</button>
+                </div>
+            </a>
+        </div>
+    <script>
+
+    var image_map = [],
+        title_map = [],
+        image_nodes = document.getElementsByClassName('image'),
+        photo_list,
+        title = document.getElementById('photo_title');
+
+    (function getImages() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key=cbfb84b23a5a7af2a0bf27cc8a87d85b&gallery_id=5704-72157622566655097&per_page=6&format=json&nojsoncallback=1&auth_token=72157670651754274-ee5c159e8de3d7f6&api_sig=8d2549f634fb84d4c2fed7dc94c5f9e3');
+      xhr.onload = function() {
+         if (xhr.status === 200) {
+           debugger;
+            var photos_json = JSON.parse(xhr.responseText),
+                url_to_construct,
+                photo_list = photos_json['photos']['photo'];
+            //add all images from flickr API to image_map
+            for (var i = 0; i < 10; i++ ) {
+                var farm = photo_list[i]['farm'],
+                    server = photo_list[i]['server'],
+                    id = photo_list[i]['id'],
+                    secret = photo_list[i]['secret'],
+                    url_to_construct =`http://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
+
+                    image_map.push(url_to_construct);
+                    title_map.push(photo_list[i]['title']);
+                    console.log(image_map);
+                    console.log(title_map);
+                    image_nodes[i].style.backgroundImage = `url(${url_to_construct})`;
+            }
+       }
+    };
+    xhr.send();
+  }());
+
+    (function clickedOnImage() {
+        //go through all thumbails and add an event listener, that shows the correct lightbox image with the correct image
+        for (var i=0; i <image_nodes.length; i++ ) {
+            var clicked_image = image_nodes[i];
+            clicked_image.addEventListener('click', function() {
+                var current_attr = clicked_image.getAttribute('data-img'),
+                    imageToDisplay = document.getElementById('view_image'),
+                    lightbox = document.getElementsByClassName('lightbox');
+
+                imageToDisplay.setAttribute('src', image_map[current_attr]);
+                lightbox[0].removeAttribute('style');
+                console.log(current_attr)
+                title.innerHTML = title_map[current_attr];
+                console.log(title.innerHTML);
+            });
+       }
+    }());
+
+    (function clickExit() {
+        var exit = document.getElementById('exit');
+        exit.addEventListener('click', function() {
+            var lightbox = document.getElementsByClassName('lightbox');
+            lightbox[0].setAttribute('style','display:none');
+        });
+    }());
+
+    (function next() {
+        var next_btn = document.getElementById('next');
+        //if next_btn has been rendered since it may not be until a photo is clicked upon
+        next_btn.addEventListener('click', function() {
+            var current_image = document.getElementById('view_image'),
+                photo = current_image.getAttribute('src'),
+                current_index = image_map.indexOf(photo);
+
+            //if there are more images left in the array
+            if (current_index < image_map.length - 1) {
+                current_index += 1;
+                current_image.setAttribute('src', image_map[current_index]);
+                title.innerHTML = title_map[current_index];
+            //if index is n - 1 where n is the length of the array, set the image back to the first one
+            } else {
+                current_image.setAttribute('src', image_map[0]);
+                title.innerHTML = title_map[0];
+            }
+        });
+    }());
+
+    (function previous() {
+        var previous_btn = document.getElementById('previous');
+        previous_btn.addEventListener('click', function() {
+            var current_image = document.getElementById('view_image'),
+                photo = current_image.getAttribute('src'),
+                current_index = image_map.indexOf(photo);
+
+            //while we have not yet reached the beginning of the array
+            if (current_index > 0) {
+                current_index -= 1;
+                current_image.setAttribute('src', image_map[current_index]);
+                title.innerHTML = title_map[current_index];
+            //if we reach the beginning of the array
+            } else {
+                current_image.setAttribute('src', image_map[image_map.length - 1]);
+                title.innerHTML = title_map[image_map.length - 1];
+            }
+        });
+    }());
+
+    </script>
+</body>
+</html>
