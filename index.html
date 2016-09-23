@@ -53,7 +53,7 @@
 
     (function getImages() {
       var xhr = new XMLHttpRequest();
-      xhr.open('GET','https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key=2870511613215a2ded0ca5c9cc16685c&gallery_id=5704-72157622566655097&per_page=8&format=json&nojsoncallback=1&auth_token=72157674164139286-514b18a20330296c&api_sig=b0c116e152915218654e8f82c42ee7c2');
+      xhr.open('GET','https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key=28d11e888f278db21c979502ecae1b1e&gallery_id=5704-72157622566655097&page=8&format=json&nojsoncallback=1&auth_token=72157674284438055-9b5aac1891ef046f&api_sig=0478fcdeda1512564bcc9ce4ea01b6c8');
       xhr.onload = function() {
          if (xhr.status === 200) {
             var photos_json = JSON.parse(xhr.responseText),
